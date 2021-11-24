@@ -6,7 +6,7 @@ A small test suite to see how fast an RPC service is.
 Install the locust library, run locust, and open http://localhost:8089
 ```sh
 pip install locust
-git clone repo
+git clone https://github.com/the-1ndex/rpc-benchmarks.git
 cd rpc-benchmark
 # Use gma for benchmarking getMultipleAccounts and gpa for getProgramAccounts
 locust --tags gpa
