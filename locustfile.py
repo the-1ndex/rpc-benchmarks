@@ -8,7 +8,7 @@ serum_accounts = [pubkey.strip() for pubkey in open('serum_accounts.txt').readli
 class APIUser(HttpUser):
     @tag('gma')
     @task
-    def get_confirmed_transaction(self):
+    def get_multiple_accounts(self):
         random_pubkeys = random.choices(pubkeys, k=100)
         data = {"jsonrpc": "2.0",
                 "id": 1,
@@ -17,7 +17,24 @@ class APIUser(HttpUser):
                     "encoding": "base64",
                     "commitment": "recent"
                 }]}
-        self.client.post('', json=data)
+        with self.client.post('', json=data, catch_response=True) as response:
+            if 'result' not in response.json():
+                response.failure("Got wrong response")
+
+    @tag('gai')
+    @task
+    def get_account_info(self):
+        random_pubkey = random.choice(pubkeys)
+        data = {"jsonrpc": "2.0",
+                "id": 1,
+                "method": "getAccountInfo",
+                "params": [random_pubkey, {
+                    "encoding": "base64",
+                    "commitment": "recent"
+                }]}
+        with self.client.post('', json=data, catch_response=True) as response:
+            if 'result' not in response.json():
+                response.failure("Got wrong response")
 
     @tag('gpa')
     @task
